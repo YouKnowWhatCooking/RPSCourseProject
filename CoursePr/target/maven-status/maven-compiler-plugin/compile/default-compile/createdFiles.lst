@@ -1,0 +1,8 @@
+com\config\WebAppInitializer.class
+com\controller\ClothesController.class
+com\dao\ClothesDAO$1.class
+com\dao\ClothesDAO.class
+com\dao\ClothesDAO$3.class
+com\config\SpringMvcConfig.class
+com\model\Clothes.class
+com\dao\ClothesDAO$2.class
