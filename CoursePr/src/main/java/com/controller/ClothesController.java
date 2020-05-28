@@ -20,7 +20,7 @@ public class ClothesController {
 
 
     //Полный список одежды
-    @RequestMapping(value = "/listClothes", method = RequestMethod.GET)
+    @RequestMapping(value = {"/listClothes", "/"}, method = RequestMethod.GET)
     public ModelAndView listClothesClient(ModelAndView model){
         List<Clothes> listClothes = clothesDAO.clothesList();
         model.addObject("clothesType", clothesDAO.getClothesTypes());

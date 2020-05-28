@@ -11,8 +11,12 @@ public class Print {
         this.image = image;
     }
 
+    public Print(Template template, Image image){
+        this.template = template;
+        this.image = image;
+    }
+
     public Print(){
-        
     }
 
 

@@ -5,17 +5,29 @@ public class Image {
     private String title;
     private String theme;
     private String link;
+    private String author;
+    private String status;
 
-    public Image(int id, String title, String theme, String link) {
+
+    public Image(int id, String title, String theme, String link, String author, String status) {
         this.id = id;
         this.title = title;
         this.theme = theme;
         this.link = link;
+        this.author = author;
+        this.status = status;
+    }
+
+    public Image(String title, String theme, String link, String author, String status) {
+        this.title = title;
+        this.theme = theme;
+        this.link = link;
+        this.author = author;
+        this.status = status;
     }
 
     public Image() {
     }
-
 
     public int getId() {
         return id;
@@ -49,4 +61,19 @@ public class Image {
         this.link = link;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

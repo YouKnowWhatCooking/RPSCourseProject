@@ -3,12 +3,12 @@ body, html{
     height: 100%;
 }
 body{
-    background: #D3D3D3;
+    background: #F2F2F2;
     margin: 0;
 }
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
 }
 .headContainer {
@@ -40,7 +40,7 @@ body{
     display: inline-block;
     vertical-align: top;
     color: #9A2EF3;
-    margin: 0 70px;
+    margin: 0 30px;
     
 }
 .enter {
@@ -51,9 +51,11 @@ body{
 }
 .choose {
     color: #9A2EF3;
+    font-size: 20px;
 }
 a {
     text-decoration: none;
+    color: #9A2EF3;
 }
 .product-main {
 }
@@ -72,7 +74,60 @@ h2 {
 .bot {
     text-align: center;
 }
-.button {
+.col-left {
+    width: 15%;
+    float: left;
     text-align: center;
+}
+.left-panel {
     font-size: 30px;
+    color: #9A2EF3;
+    margin: auto;
+}
+table {
+    font-size: 18px;
+    border-spacing: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+th {
+    padding: 10px 20px;
+    background: #2E2E2E;
+    color: #9A2EF3;
+    font-size: 20px;
+}
+td {
+    vertical-align: middle;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    font-size: 18px;
+}
+.wrapper{
+    width:300px;
+    margin:8% auto;
+}
+input  {
+    border:1px ;
+    width:100%;
+    padding:5px;
+    height:40px;
+    border-radius:15px;
+    margin:5px 0;
+    outline: none;
+}
+button {
+    padding: 3px 40px;
+    border: 0px;
+    background: #9A2EF3;
+    font-size: 15px;
+}
+.admin_nav{
+    margin: 0 100px;
+}
+d {
+    display: block;
+    font-size: 20px;
+}
+.title {
+    text-align: center;
 }

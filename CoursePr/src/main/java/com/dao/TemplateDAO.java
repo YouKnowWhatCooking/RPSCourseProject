@@ -22,7 +22,7 @@ public class TemplateDAO {
     public void saveOrUpdate (Template t){
         if(t.getId() > 0){
             String sql = "UPDATE Template SET location=?, price=? WHERE id='"+t.getId()+"';";
-            jdbcTemplate.update(sql, t.getLocation(), t.getPrice(), t.getId());
+            jdbcTemplate.update(sql, t.getLocation(), t.getPrice());
         } else {
             String sql = "INSERT INTO Template (location, price) VALUES (?,?)";
             jdbcTemplate.update(sql, t.getLocation(), t.getPrice());

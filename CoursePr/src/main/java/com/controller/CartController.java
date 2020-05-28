@@ -2,6 +2,7 @@ package com.controller;
 
 import com.dao.*;
 import com.model.*;
+import com.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +26,9 @@ public class CartController {
 
     @Autowired
     private ImageDAO imageDAO;
+
+    @Autowired
+    private PrintDAO printDAO;
 
     @Autowired
     private CombinationDAO combinationDAO;
@@ -73,7 +77,7 @@ public class CartController {
         int clothesID = Integer.parseInt(request.getParameter("clothesID"));
         Clothes clothes = clothesDAO.getClothesById(clothesID);
         model.addObject("clothes", clothes);
-        model.setViewName("clientViews/imageChoosePage");
+        model.setViewName("clientViews/listImages");
 
         return model;
     }
@@ -92,7 +96,7 @@ public class CartController {
         model.addObject("clothes", clothes);
         model.addObject("image", image);
 
-        model.setViewName("clientViews/templateChoosePage");
+        model.setViewName("clientViews/listTemplates");
 
         return model;
     }
@@ -102,6 +106,7 @@ public class CartController {
     //Добавить созданную пользователем комбинацию
     @RequestMapping(value = "/addCustomCombination", method = RequestMethod.GET)
     public String addCustomCombination(ModelAndView model, HttpServletRequest request, HttpSession session){
+        Print savedPrint = null;
         int clothesID = Integer.parseInt(request.getParameter("clothesID"));
         int imageID = Integer.parseInt(request.getParameter("imageID"));
         int templateID = Integer.parseInt(request.getParameter("templateID"));
@@ -109,19 +114,28 @@ public class CartController {
         Image image = imageDAO.getImageById(imageID);
         Template template = templateDAO.getTemplateById(templateID);
 
-        Print print = new Print();
-        print.setImage(image);
-        print.setTemplate(template);
+
+        int exPrint = printExists(templateID, imageID, printDAO.printList());
+        if(exPrint != -1){
+            savedPrint = printDAO.getPrintById(exPrint);
+        } else {
+            Print print = new Print();
+            print.setImage(image);
+            print.setTemplate(template);
+            printDAO.saveOrUpdate(print);
+
+            savedPrint = printDAO.getPrintById(printDAO.getLastID());
+        }
 
         if(session.getAttribute("cart") == null){
             List<Item> cart = new ArrayList<Item>();
-            cart.add(new Item(clothes, print, 1));
+            cart.add(new Item(clothes, savedPrint, 1));
             session.setAttribute("cart", cart);
         } else {
             List<Item> cart = (List<Item>)session.getAttribute("cart");
             int index = exists(clothesID, templateID, imageID, session);
             if (index == -1){
-                cart.add(new Item(clothes, print, 1));
+                cart.add(new Item(clothes, savedPrint, 1));
             } else {
                 int quantity = cart.get(index).getQuantity() + 1;
                 cart.get(index).setQuantity(quantity);
@@ -130,6 +144,66 @@ public class CartController {
         }
         return "clientViews/cartPage";
     }
+
+
+    //Удалить itemLine
+    @RequestMapping(value = "/removeLine", method = RequestMethod.GET)
+    public String removeLine(HttpServletRequest request, HttpSession session){
+        int clothesID = Integer.parseInt(request.getParameter("clothesID"));
+        int templateID = Integer.parseInt(request.getParameter("templateID"));
+        int imageID = Integer.parseInt(request.getParameter("imageID"));
+
+        List<Item> cart = (List<Item>) session.getAttribute("cart");
+        int index = exists(clothesID, templateID, imageID, session);
+        cart.remove(index);
+        session.setAttribute("cart", cart);
+        return "clientViews/cartPage";
+    }
+
+    //Увеличить количество
+    @RequestMapping(value = "/incQuantity", method = RequestMethod.GET)
+    public String incQuantity(ModelAndView model, HttpServletRequest request, HttpSession session){
+        int clothesID = Integer.parseInt(request.getParameter("clothesID"));
+        int templateID = Integer.parseInt(request.getParameter("templateID"));
+        int imageID = Integer.parseInt(request.getParameter("imageID"));
+
+        List<Item> cart = (List<Item>) session.getAttribute("cart");
+        int index = exists(clothesID, templateID, imageID, session);
+        cart.get(index).setQuantity(cart.get(index).getQuantity()+1);
+        session.setAttribute("cart", cart);
+        return "clientViews/cartPage";
+    }
+
+    //Уменьшить количество
+    @RequestMapping(value = "/decQuantity", method = RequestMethod.GET)
+    public String decQuantity(ModelAndView model, HttpServletRequest request, HttpSession session){
+        int clothesID = Integer.parseInt(request.getParameter("clothesID"));
+        int templateID = Integer.parseInt(request.getParameter("templateID"));
+        int imageID = Integer.parseInt(request.getParameter("imageID"));
+
+        List<Item> cart = (List<Item>) session.getAttribute("cart");
+        int index = exists(clothesID, templateID, imageID, session);
+        cart.get(index).setQuantity(cart.get(index).getQuantity()-1);
+        if(cart.get(index).getQuantity() == 0){
+            removeLine(request, session);
+            session.setAttribute("cart", cart);
+            return "clientViews/cartPage";
+        } else {
+            session.setAttribute("cart", cart);
+            return "clientViews/cartPage";
+        }
+
+    }
+
+
+    //Проверка на существование принта
+    static private int printExists(int templateID, int imageID, List<Print> listPrints){
+        for(int i=0; i<listPrints.size(); i++)
+            if ((listPrints.get(i).getImage().getId() == imageID)
+                    & (listPrints.get(i).getTemplate().getId() == templateID)) return listPrints.get(i).getId();
+        return -1;
+}
+
 
     //Проверка на существование комбинации
     static private int exists(int clothesID, int templateID, int imageID, HttpSession session){

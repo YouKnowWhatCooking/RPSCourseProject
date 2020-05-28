@@ -28,12 +28,16 @@ public class PrintDAO {
 
     public void saveOrUpdate (Print p){
         if(p.getId() > 0){
-            String sql = "UPDATE Print SET templateID=?, imageID=?WHERE id='"+p.getId()+"';";
+            String sql = "UPDATE Print SET templateID=?, imageID=? WHERE id='"+p.getId()+"';";
             jdbcTemplate.update(sql, p.getTemplate().getId(), p.getImage().getId());
         } else {
-            String sql = "INSERT INTO Print (location, price) VALUES (?,?)";
+            String sql = "INSERT INTO Print (templateID, imageID) VALUES (?,?)";
             jdbcTemplate.update(sql, p.getTemplate().getId(), p.getImage().getId());
         }
+    }
+    public int delete (Integer id){
+        String sql = "DELETE FROM print WHERE id=" + id;
+        return jdbcTemplate.update(sql);
     }
 
 
@@ -67,5 +71,10 @@ public class PrintDAO {
             }
         };
         return jdbcTemplate.query(sql, extractor);
+    }
+
+    public int getLastID (){
+        int result = jdbcTemplate.queryForObject("SELECT id FROM Print ORDER BY id DESC LIMIT 1", Integer.class);
+        return result;
     }
 }

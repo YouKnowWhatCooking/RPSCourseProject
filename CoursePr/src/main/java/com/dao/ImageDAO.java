@@ -21,11 +21,11 @@ public class ImageDAO {
 
     public void saveOrUpdate (Image i){
         if(i.getId() > 0){
-            String sql = "UPDATE Image SET title=?, theme=?, link=? WHERE id='"+i.getId()+"';";
-            jdbcTemplate.update(sql, i.getTitle(), i.getTheme(), i.getLink());
+            String sql = "UPDATE Image SET title=?, theme=?, link=?, author=?, status=? WHERE id='"+i.getId()+"';";
+            jdbcTemplate.update(sql, i.getTitle(), i.getTheme(), i.getLink(), i.getAuthor(), i.getStatus());
         } else {
-            String sql = "INSERT INTO Image (title, theme, link) VALUES (?,?,?)";
-            jdbcTemplate.update(sql, i.getTitle(), i.getTheme(), i.getLink());
+            String sql = "INSERT INTO Image (title, theme, link, author, status) VALUES (?,?,?,?,?)";
+            jdbcTemplate.update(sql, i.getTitle(), i.getTheme(), i.getLink(), i.getAuthor(), i.getStatus());
         }
     }
 
@@ -38,7 +38,9 @@ public class ImageDAO {
                     String title = resultSet.getString("title");
                     String theme = resultSet.getString("theme");
                     String link = resultSet.getString("link");
-                    return new Image(id, title, theme, link);
+                    String author = resultSet.getString("author");
+                    String status = resultSet.getString("status");
+                    return new Image(id, title, theme, link, author, status);
                 }
                 return null;
             }
@@ -75,8 +77,9 @@ public class ImageDAO {
                 String title = resultSet.getString("title");
                 String theme = resultSet.getString("theme");
                 String link = resultSet.getString("link");
-
-                return new Image(id, title, theme, link);
+                String author = resultSet.getString("author");
+                String status = resultSet.getString("status");
+                return new Image(id, title, theme, link, author, status);
             }
         };
         return jdbcTemplate.query(sql, rowMapper);
@@ -92,8 +95,9 @@ public class ImageDAO {
                 String title = resultSet.getString("title");
                 String theme = resultSet.getString("theme");
                 String link = resultSet.getString("link");
-
-                return new Image(id, title, theme, link);
+                String author = resultSet.getString("author");
+                String status = resultSet.getString("status");
+                return new Image(id, title, theme, link, author, status);
 
             }
         };

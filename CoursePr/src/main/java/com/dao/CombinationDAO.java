@@ -27,11 +27,11 @@ public class CombinationDAO {
 
     public void saveOrUpdate (Combination c){
         if(c.getId() > 0){
-            String sql = "UPDATE Combination SET clothesID=?, templateID=?, totalSum=?, combinedImageLink=? WHERE id='"+c.getId()+"';";
-            jdbcTemplate.update(sql, c.getClothes().getId(), c.getPrint().getId(), c.getTotalSum(), c.getCombinedImageLink(), c.getId());
+            String sql = "UPDATE Combination SET clothesID=?, printID=?, totalSum=?, combinedImageLink=? WHERE id='"+c.getId()+"';";
+            jdbcTemplate.update(sql, c.getClothes().getId(), c.getPrint().getId(), c.getTotalSum(), c.getCombinedImageLink());
         } else {
-            String sql = "INSERT INTO Combination (clothesID, templateID, totalSum, combinedImageLink) VALUES (?,?,?,?)";
-            jdbcTemplate.update(sql, c.getClothes().getId(), c.getPrint().getId(), c.getPrint(), c.getCombinedImageLink());
+            String sql = "INSERT INTO Combination (clothesID, printID, totalSum, combinedImageLink) VALUES (?,?,?,?)";
+            jdbcTemplate.update(sql, c.getClothes().getId(), c.getPrint().getId(), c.getTotalSum(), c.getCombinedImageLink());
         }
     }
 
